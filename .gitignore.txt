@@ -1,2 +1,2 @@
 # class exercises, not for returning
-/part1
+part1/
