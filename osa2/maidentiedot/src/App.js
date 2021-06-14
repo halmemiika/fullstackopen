@@ -1,7 +1,27 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const CountryInfo = ({ countries, countryDetails }) => {
+const WeatherInfo = ({ weather }) => {
+  return (
+    <>
+      <h2>Weather in {weather.location.name}</h2>
+      <p>
+        <b>temperature:</b> {weather.current.temp_c} Celcius
+      </p>
+      <img
+        src={weather.current.condition.icon}
+        style={{ height: 75 }}
+        alt="weather-img"
+      ></img>
+      <p>
+        <b>wind:</b> {weather.current.wind_kph} kph direction{" "}
+        {weather.current.wind_dir}
+      </p>
+    </>
+  );
+};
+
+const CountryInfo = ({ countries, countryDetails, weather }) => {
   if (countries.length > 10) {
     return <p>Too many matches, specify another filter</p>;
   } else if (countries.length < 10 && countries.length > 1) {
@@ -24,13 +44,14 @@ const CountryInfo = ({ countries, countryDetails }) => {
         <h1>{country.name}</h1>
         <p>capital {country.capital}</p>
         <p>population {country.population} </p>
-        <h2>languages</h2>
+        <h2>Spoken languages</h2>
         <ul>
           {country.languages.map((language) => (
             <li key={language.name}>{language.name}</li>
           ))}
         </ul>
         <img src={country.flag} style={{ height: 100 }} alt="flag-img"></img>
+        <WeatherInfo weather={weather} />
       </>
     );
   } else {
@@ -41,11 +62,15 @@ const CountryInfo = ({ countries, countryDetails }) => {
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [searchInput, setSearch] = useState("");
+  const [weather, setWeather] = useState([]);
+  const [capital, setCapital] = useState("Helsinki");
+
+  const api_key = process.env.REACT_APP_API_KEY;
 
   const hook = () => {
-    axios.get("https://restcountries.eu/rest/v2/all").then((response) => {
-      setCountries(response.data);
-    });
+    axios
+      .get("https://restcountries.eu/rest/v2/all")
+      .then((response) => setCountries(response.data));
   };
 
   useEffect(hook, []);
@@ -54,14 +79,32 @@ const App = () => {
     setSearch(event.target.value.toLowerCase());
   };
 
-  const filterCountries = countries.filter(
-    (country) => country.name.toLowerCase().indexOf(searchInput) !== -1
-  );
-
   const countryDetails = (event) => {
     const name = event.target.value;
     const index = countries.findIndex((country) => country.name === name);
+    setSearch(countries[index].name.toLowerCase());
+    setCapital(countries[index].capital);
   };
+
+  const filterCountries =
+    countries.length === 1
+      ? countries
+      : countries.filter(
+          (country) => country.name.toLowerCase().indexOf(searchInput) !== -1
+        );
+
+  let params = {
+    key: api_key,
+    q: capital,
+  };
+
+  const weatherHook = () => {
+    axios
+      .get(" http://api.weatherapi.com/v1/current.json", { params })
+      .then((response) => setWeather(response.data));
+  };
+
+  useEffect(weatherHook, []);
 
   return (
     <div>
@@ -69,6 +112,7 @@ const App = () => {
       <CountryInfo
         countries={filterCountries}
         countryDetails={countryDetails}
+        weather={weather}
       />
     </div>
   );
