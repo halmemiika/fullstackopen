@@ -61,41 +61,48 @@ const CountryInfo = ({ countries, countryDetails, weather }) => {
 
 const App = () => {
   const [countries, setCountries] = useState([]);
+  const [renderCountry, setRenderCountry] = useState([]);
   const [searchInput, setSearch] = useState("");
   const [weather, setWeather] = useState([]);
-  const [capital, setCapital] = useState("Helsinki");
 
   const api_key = process.env.REACT_APP_API_KEY;
 
   const hook = () => {
-    axios
-      .get("https://restcountries.eu/rest/v2/all")
-      .then((response) => setCountries(response.data));
+    axios.get("https://restcountries.eu/rest/v2/all").then((response) => {
+      setCountries(response.data);
+    });
   };
 
   useEffect(hook, []);
 
-  const searchCountry = (event) => {
+  const handleSearchChange = (event) => {
     setSearch(event.target.value.toLowerCase());
   };
+
+  useEffect(() => {
+    setRenderCountry(
+      countries.length === 1
+        ? countries
+        : countries.filter(
+            (country) => country.name.toLowerCase().indexOf(searchInput) !== -1
+          )
+    );
+  }, [searchInput, countries]);
 
   const countryDetails = (event) => {
     const name = event.target.value;
     const index = countries.findIndex((country) => country.name === name);
     setSearch(countries[index].name.toLowerCase());
-    setCapital(countries[index].capital);
+    setRenderCountry(
+      countries.filter(
+        (country) => country.name.toLowerCase().indexOf(searchInput) !== -1
+      )
+    );
   };
 
-  const filterCountries =
-    countries.length === 1
-      ? countries
-      : countries.filter(
-          (country) => country.name.toLowerCase().indexOf(searchInput) !== -1
-        );
-
-  let params = {
+  const params = {
     key: api_key,
-    q: capital,
+    q: renderCountry.length === 1 ? renderCountry[0].capital : "Helsinki",
   };
 
   const weatherHook = () => {
@@ -104,13 +111,13 @@ const App = () => {
       .then((response) => setWeather(response.data));
   };
 
-  useEffect(weatherHook, []);
+  useEffect(weatherHook, [weatherHook]);
 
   return (
     <div>
-      find countries <input onChange={searchCountry} />
+      find countries <input onChange={handleSearchChange} />
       <CountryInfo
-        countries={filterCountries}
+        countries={renderCountry}
         countryDetails={countryDetails}
         weather={weather}
       />
