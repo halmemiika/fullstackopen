@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import phoneBookService from "./services/persons";
-<<<<<<< HEAD
 
 const Notification = ({ message, messageClass }) => {
   if (message === null) {
@@ -11,8 +10,6 @@ const Notification = ({ message, messageClass }) => {
     return <div className="error">{message}</div>;
   }
 };
-=======
->>>>>>> b482c475ee1520d0117ed7054328a87ba1efb29b
 
 const Filter = ({ handleFilter }) => {
   return (
@@ -79,7 +76,6 @@ const App = () => {
           `${newName} is already added to phonebook, replace the old number with a new one?`
         )
       ) {
-<<<<<<< HEAD
         phoneBookService
           .update(person.id, nameObject)
           .then((data) => {
@@ -105,30 +101,16 @@ const App = () => {
               setMessageClass("success");
             }, 5000);
           });
-=======
-        phoneBookService.update(person.id, nameObject).then((data) => {
-          setPersons(
-            persons.map((newPerson) =>
-              newPerson.id !== data.id ? newPerson : data
-            )
-          );
-          setNewName("");
-          setnewNumber("");
-        });
->>>>>>> b482c475ee1520d0117ed7054328a87ba1efb29b
       }
     } else if (person && person.number === newNumber) {
       alert(`${person.name} is already added to the phonebook!`);
     } else {
       phoneBookService.create(nameObject).then((data) => {
         setPersons(persons.concat(data));
-<<<<<<< HEAD
         setMessage(`Added ${newName}`);
         setTimeout(() => {
           setMessage(null);
         }, 5000);
-=======
->>>>>>> b482c475ee1520d0117ed7054328a87ba1efb29b
         setNewName("");
         setnewNumber("");
       });
@@ -148,13 +130,10 @@ const App = () => {
               .filter((person) => person.name !== undefined)
           )
         );
-<<<<<<< HEAD
       setMessage(`Deleted ${personEntry.name}`);
       setTimeout(() => {
         setMessage(null);
       }, 5000);
-=======
->>>>>>> b482c475ee1520d0117ed7054328a87ba1efb29b
     }
   };
 
