@@ -4,8 +4,6 @@ const morgan = require("morgan");
 const cors = require("cors");
 require("dotenv").config();
 const Person = require("./models/person");
-const { response } = require("express");
-const person = require("./models/person");
 
 app.use(express.json());
 app.use(express.static("build"));
@@ -23,7 +21,7 @@ const errorHandler = (error, request, response, next) => {
   next(error);
 };
 
-morgan.token("json", (req, res) => {
+morgan.token("json", (req) => {
   const method = req.method;
   if (method === "POST") {
     return JSON.stringify(req.body);
@@ -61,7 +59,7 @@ app.get("/api/persons/:id", (req, res, next) => {
 
 app.delete("/api/persons/:id", (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-    .then((result) => {
+    .then(() => {
       res.status(204).end();
     })
     .catch((err) => next(err));
