@@ -105,15 +105,26 @@ const App = () => {
     } else if (person && person.number === newNumber) {
       alert(`${person.name} is already added to the phonebook!`);
     } else {
-      phoneBookService.create(nameObject).then((data) => {
-        setPersons(persons.concat(data));
-        setMessage(`Added ${newName}`);
-        setTimeout(() => {
-          setMessage(null);
-        }, 5000);
-        setNewName("");
-        setnewNumber("");
-      });
+      phoneBookService
+        .create(nameObject)
+        .then((data) => {
+          setPersons(persons.concat(data));
+          setMessage(`Added ${newName}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+          setNewName("");
+          setnewNumber("");
+        })
+        .catch((err) => {
+          const message = err.response.data.error;
+          setMessage(message);
+          setMessageClass("error");
+          setTimeout(() => {
+            setMessage(null);
+            setMessageClass("success");
+          }, 5000);
+        });
     }
   };
 
