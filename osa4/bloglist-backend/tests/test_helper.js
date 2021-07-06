@@ -1,4 +1,13 @@
 const Blog = require("../models/blog");
+const User = require("../models/user");
+
+const testUser = [
+  {
+    username: "root",
+    password: "sekret",
+    _id: "60e4546a494e5b313c60283c",
+  },
+];
 
 const initialBlogs = [
   {
@@ -51,6 +60,9 @@ const initialBlogs = [
   },
 ];
 
+const testAuth =
+  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYwZTQ1NDZhNDk0ZTViMzEzYzYwMjgzYyIsImlhdCI6MTYyNTU3NzEyNSwiZXhwIjoxNjI1NTgwNzI1fQ.ky0ls-i16AqPQDggRveffnhLQDlKtZa2BnUn2ckBuv8";
+
 const nonExistingId = async () => {
   const blog = new Blog({ title: "toberemoved", url: "testing.com" });
   await blog.save();
@@ -64,8 +76,16 @@ const blogsInDb = async () => {
   return blogs.map((blog) => blog.toJSON());
 };
 
+const usersInDb = async () => {
+  const users = await User.find({});
+  return users.map((user) => user.toJSON());
+};
+
 module.exports = {
   initialBlogs,
+  testUser,
+  testAuth,
   nonExistingId,
   blogsInDb,
+  usersInDb,
 };
