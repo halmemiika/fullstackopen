@@ -17,15 +17,14 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [messageClass, setMessageClass] = useState("success");
 
-  const [newTitle, setNewTitle] = useState("");
-  const [newAuthor, setNewAuthor] = useState("");
-  const [newUrl, setNewUrl] = useState("");
-
   const blogFormRef = useRef();
-  const oneBlogRef = useRef();
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService
+      .getAll()
+      .then((blogs) =>
+        setBlogs(blogs.sort((a, b) => (a.likes < b.likes ? 1 : -1)))
+      );
   }, []);
 
   useEffect(() => {
@@ -59,24 +58,16 @@ const App = () => {
     }
   };
 
-  const handleNewBlog = (e) => {
-    e.preventDefault();
-    const newBlog = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
-    };
+  const handleNewBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility();
     blogService
-      .create(newBlog)
-      .then((returnedBlog) => blogs.concat(returnedBlog));
-    setNewTitle("");
-    setNewAuthor("");
-    setNewUrl("");
-    setErrorMessage(`a new blog ${newTitle} by ${newAuthor} added`);
+      .create(blogObject)
+      .then((returnedBlog) => setBlogs(blogs.concat(returnedBlog)));
+    setErrorMessage(
+      `a new blog ${blogObject.title} by ${blogObject.author} added`
+    );
     setTimeout(() => {
       setErrorMessage(null);
-      window.location.reload();
     }, 5000);
   };
 
@@ -98,7 +89,7 @@ const App = () => {
   };
 
   const handleLikes = (e) => {
-    const blogToUpdate = oneBlogRef.current.blog;
+    const blogToUpdate = blogs.find((blog) => blog.id === e.target.id);
     const newBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1 };
     blogService
       .update(blogToUpdate.id, newBlog)
@@ -109,19 +100,36 @@ const App = () => {
           )
         )
       );
+    sortBlogs();
+  };
+
+  const handleDeletion = (e) => {
+    const id = e.target.id;
+    const blogToDelete = blogs.find((blog) => blog.id === id);
+    if (
+      window.confirm(
+        `Remove blog ${blogToDelete.title} by ${blogToDelete.author}`
+      )
+    ) {
+      blogService.remove(id);
+      setBlogs(blogs.filter((blog) => blog.id !== id));
+      setErrorMessage(
+        `Blog ${blogToDelete.title} by ${blogToDelete.author} deleted`
+      );
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
+  };
+
+  const sortBlogs = () => {
+    const sorted = blogs.sort((a, b) => (a.likes < b.likes ? 1 : -1));
+    setBlogs(sorted);
   };
 
   const allBlogs = () => (
     <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-      <BlogForm
-        onSubmit={handleNewBlog}
-        titleValue={newTitle}
-        authorValue={newAuthor}
-        urlValue={newUrl}
-        handleTitleChange={({ target }) => setNewTitle(target.value)}
-        handleAuthorChange={({ target }) => setNewAuthor(target.value)}
-        handleUrlChange={({ target }) => setNewUrl(target.value)}
-      />
+      <BlogForm createBlog={handleNewBlog} />
     </Togglable>
   );
 
@@ -148,7 +156,8 @@ const App = () => {
             key={blog.id}
             blog={blog}
             handleLikes={handleLikes}
-            ref={oneBlogRef}
+            handleDeletion={handleDeletion}
+            user={user}
           />
         ))}
       </div>

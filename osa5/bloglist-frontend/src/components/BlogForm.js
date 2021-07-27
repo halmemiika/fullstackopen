@@ -1,28 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 
-const BlogForm = ({
-  onSubmit,
-  handleTitleChange,
-  handleAuthorChange,
-  handleUrlChange,
-  titleValue,
-  authorValue,
-  urlValue,
-}) => {
+const BlogForm = ({ createBlog }) => {
+  const [newTitle, setNewTitle] = useState("");
+  const [newAuthor, setNewAuthor] = useState("");
+  const [newUrl, setNewUrl] = useState("");
+
+  const handleAuthorChange = (e) => {
+    setNewAuthor(e.target.value);
+  };
+  const handleTitleChange = (e) => {
+    setNewTitle(e.target.value);
+  };
+  const handleUrlChange = (e) => {
+    setNewUrl(e.target.value);
+  };
+
+  const addBlog = (e) => {
+    e.preventDefault();
+    createBlog({
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl,
+    });
+
+    setNewAuthor("");
+    setNewTitle("");
+    setNewUrl("");
+  };
+
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={addBlog}>
       <h2>create new</h2>
       <div>
         title:
-        <input value={titleValue} onChange={handleTitleChange} />
+        <input id="title" value={newTitle} onChange={handleTitleChange} />
       </div>
       <div>
         author:
-        <input value={authorValue} onChange={handleAuthorChange} />
+        <input id="author" value={newAuthor} onChange={handleAuthorChange} />
       </div>
       <div>
         url:
-        <input value={urlValue} onChange={handleUrlChange} />
+        <input id="url" value={newUrl} onChange={handleUrlChange} />
       </div>
       <button type="submit">save</button>
     </form>
