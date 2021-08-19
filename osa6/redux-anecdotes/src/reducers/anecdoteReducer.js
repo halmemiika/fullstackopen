@@ -8,18 +8,13 @@ const reducer = (state = [], action) => {
   switch (action.type) {
     case "VOTE":
       const id = action.data.id;
-      const votedAnecdote = state.find((a) => a.id === id);
-      const changedAnecdote = {
-        ...votedAnecdote,
-        votes: votedAnecdote.votes + 1,
-      };
-      const newAnes = state.map((a) => (a.id !== id ? a : changedAnecdote));
+      const newAnes = state.map((a) => (a.id !== id ? a : action.data));
       const newOrder = likeOrder(newAnes);
       return newOrder;
     case "NEW_ANECDOTE":
       return [...state, action.data];
     case "INIT_ANECDOTES":
-      return action.data;
+      return likeOrder(action.data);
     default:
       return state;
   }
@@ -46,9 +41,12 @@ export const initializedAnecdotes = () => {
 };
 
 export const voteFor = (id) => {
-  return {
-    type: "VOTE",
-    data: { id },
+  return async (dispatch) => {
+    const votedAnecdote = await anecdoteService.vote(id);
+    dispatch({
+      type: "VOTE",
+      data: votedAnecdote,
+    });
   };
 };
 

@@ -13,4 +13,13 @@ const createNew = async (content) => {
   return res.data;
 };
 
-export default { getAll, createNew };
+const vote = async (id) => {
+  const res = await axios.get(`${baseUrl}/${id}`);
+  const updateRes = await axios.put(`${baseUrl}/${id}`, {
+    ...res.data,
+    votes: res.data.votes + 1,
+  });
+  return updateRes.data;
+};
+
+export default { getAll, createNew, vote };
