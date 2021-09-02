@@ -96,9 +96,6 @@ const CreateNew = (props) => {
   const content = useField("text");
   const author = useField("text");
   const info = useField("text");
-  delete content.reset;
-  delete author.reset;
-  delete info.reset;
 
   const history = useHistory();
 
@@ -112,6 +109,8 @@ const CreateNew = (props) => {
     });
     history.push("/");
   };
+
+  
 
   return (
     <div>
@@ -130,7 +129,12 @@ const CreateNew = (props) => {
           <input {...info} />
         </div>
         <button type="submit">create</button>
-        <input type="reset" value="reset" />
+        <button
+          type="reset"
+          onClick={(content.reset, info.reset, author.reset)}
+        >
+          reset
+        </button>
       </form>
     </div>
   );

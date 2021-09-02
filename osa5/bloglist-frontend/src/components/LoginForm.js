@@ -1,5 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Button, TextField } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
 
 const LoginForm = ({
   handleLogin,
@@ -8,24 +20,42 @@ const LoginForm = ({
   username,
   password,
 }) => {
+  const classes = useStyles();
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleLogin} className={classes.form}>
       <div>
-        username
-        <input id="username" value={username} onChange={handleUsernameChange} />
+        <TextField
+          id="username"
+          value={username}
+          onChange={handleUsernameChange}
+          label="username"
+          variant="outlined"
+          required
+          margin="normal"
+        />
       </div>
       <div>
-        password
-        <input
+        <TextField
           id="password"
           type="password"
           value={password}
           onChange={handlePasswordChange}
+          label="password"
+          variant="outlined"
+          required
+          margin="normal"
         />
       </div>
-      <button id="login-button" type="submit">
+      <Button
+        id="login-button"
+        type="submit"
+        variant="contained"
+        color="primary"
+        className={classes.submit}
+        fullWidth
+      >
         login
-      </button>
+      </Button>
     </form>
   );
 };
