@@ -14,7 +14,6 @@ Worked on learning modern full stack web development with React, NodeJS, Express
   - Another simple full stack application where user can add new blogs and comment on those. Also user can delete only his own blogs
   - Styled with [material-ui](https://mui.com/)
   - Has few bugs as well as missing features but the core functionality works
-  - [Frontend source code](https://github.com/halmemiika/fullstackopen/tree/main/osa5/bloglist-frontend)
-  - [Backend source code](https://github.com/halmemiika/fullstackopen/tree/main/osa4/bloglist-backend)
+  - [Frontend source code](https://github.com/halmemiika/fullstackopen/tree/main/osa5/bloglist-frontend) and [Backend source code](https://github.com/halmemiika/fullstackopen/tree/main/osa4/bloglist-backend)
   - [Live site](https://limitless-sea-57421.herokuapp.com/) with testing account:
   - username: `test` password: `test123`
