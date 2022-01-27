@@ -17,4 +17,4 @@ Worked on learning modern full stack web development with React, NodeJS, Express
   - [Frontend source code](https://github.com/halmemiika/fullstackopen/tree/main/osa5/bloglist-frontend)
   - [Backend source code](https://github.com/halmemiika/fullstackopen/tree/main/osa4/bloglist-backend)
   - [Live site](https://limitless-sea-57421.herokuapp.com/) with testing account
-  - > username: `test` password: `test123`
+  - username: `test` password: `test123`
