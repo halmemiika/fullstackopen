@@ -34,6 +34,7 @@ app.use(
   )
 );
 app.use(middleware.tokenExtractor);
+app.use(express.static("build"));
 
 app.use("/api/blogs", middleware.userExtractor, blogsRouter);
 app.use("/api/users", userRouter);
